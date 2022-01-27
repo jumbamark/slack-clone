@@ -16,11 +16,13 @@ import styled from "styled-components";
 import CreateIcon from "@mui/icons-material/Create";
 import SidebarOption from "./SidebarOption";
 import {useCollection} from "react-firebase-hooks/firestore";
-import {db} from "../firebase";
+import {db, auth} from "../firebase";
 import {collection} from "firebase/firestore";
+import {useAuthState} from "react-firebase-hooks/auth";
 
 function Sidebar() {
-  const [channels, loading, error] = useCollection(collection(db, "rooms"));
+  const [channels] = useCollection(collection(db, "rooms"));
+  const [user] = useAuthState(auth);
 
   return (
     <SidebarContainer>
@@ -29,7 +31,7 @@ function Sidebar() {
           <h2>The Prime Geeks HQ</h2>
           <h3>
             <FiberManualRecord />
-            Jumba Mark
+            {user.displayName}
           </h3>
         </SidebarInfo>
         <CreateIcon />
