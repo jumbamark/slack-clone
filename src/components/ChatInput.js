@@ -2,11 +2,13 @@ import {Button} from "@mui/material";
 import React, {useState} from "react";
 import styled from "styled-components";
 import {doc, serverTimestamp, collection, addDoc} from "firebase/firestore";
-import {db} from "../firebase";
+import {auth, db} from "../firebase";
+import {useAuthState} from "react-firebase-hooks/auth";
 
 function ChatInput({channelName, channelId, chatRef}) {
   // const inputRef = useRef(null);
   const [input, setInput] = useState("");
+  const [user] = useAuthState(auth);
 
   const sendMessage = (e) => {
     e.preventDefault(); // prevents refresh
@@ -20,8 +22,10 @@ function ChatInput({channelName, channelId, chatRef}) {
       //  message: inputRef.current.value,
       message: input,
       timestamp: serverTimestamp(),
-      user: "Jumba Mark",
-      userImage: "",
+      user: user.displayName,
+      userImage: user.photoURL,
+      // user: "Jumba Mark",
+      // userImage: "",
     };
 
     const messagesRef = addDoc(collection(docRef, "messages"), docData);
